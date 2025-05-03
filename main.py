@@ -22,7 +22,7 @@ def run_experiment():
 
     # 参数配置
     BASE_PATH = 'F:\资料文件\实验程序\SoundPressure_oddball\Sound'  # 更改为你的文件夹路径
-
+    triggerbox = TriggerBox("COM7")
     # 创建CSV日志文件
     with open('trigger_log.csv', 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
@@ -95,7 +95,7 @@ def run_experiment():
 
                 # 发送组合开始trigger
                 combo_start = STATUS_MAP['start'] ^ sound_code ^ freq_code
-                # triggerbox.output_event_data(combo_start)
+                triggerbox.output_event_data(combo_start)
                 writer.writerow([
                     time.time(), combo_start, 'block_start',
                     sound_type, freq, None, block, None
@@ -106,7 +106,7 @@ def run_experiment():
                 for trial_idx, level in enumerate(trials):
                     # 发送试次开始trigger
                     trigger_on = STATUS_MAP['start'] ^ sound_code ^ freq_code ^ LEVEL_MAP[level]
-                    # triggerbox.output_event_data(trigger_on)
+                    triggerbox.output_event_data(trigger_on)
                     writer.writerow([
                         time.time(), trigger_on, 'trial_start',
                         sound_type, freq, level, block, trial_idx
@@ -125,9 +125,9 @@ def run_experiment():
                     s.play()
                     core.wait(s.duration)
 
-                    # 发送试次结束trigger
+                    #发送试次结束trigger
                     trigger_off = STATUS_MAP['end'] ^ sound_code ^ freq_code ^ LEVEL_MAP[level]
-                    # triggerbox.output_event_data(trigger_off)
+                    triggerbox.output_event_data(trigger_off)
                     writer.writerow([
                         time.time(), trigger_off, 'trial_end',
                         sound_type, freq, level, block, trial_idx
@@ -136,7 +136,7 @@ def run_experiment():
 
                 # 发送组合结束trigger
                 combo_end = STATUS_MAP['end'] ^ sound_code ^ freq_code
-                # triggerbox.output_event_data(combo_end)
+                triggerbox.output_event_data(combo_end)
                 writer.writerow([
                     time.time(), combo_end, 'block_end',
                     sound_type, freq, None, block, None
@@ -158,5 +158,5 @@ def run_experiment():
 
 if __name__ == "__main__":
     prefs.hardware['audioLib'] = ['ptb']  # 可选值: ['ptb', 'pyo', 'pygame']
-    prefs.hardware['audioDevice'] = '耳机 (2- WH-CH720N)'  # 指定设备名称
+    prefs.hardware['audioDevice'] = '耳机 (sanag A30S Pro Max)'  # 指定设备名称
     run_experiment()
